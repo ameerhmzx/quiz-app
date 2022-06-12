@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {verifyAuth} from "../../../lib/auth";
 import {JWTPayload} from "jose";
 import {PrismaClient} from "@prisma/client";
+import {verifyAuth} from "../../../../lib/auth";
 
 
 /**
@@ -35,7 +35,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
   const prisma = new PrismaClient()
   const {qid} = req.query;
-  const quiz_id = Number.parseInt(qid.toString())
+  const quiz_id = Number.parseInt(qid.toString());
 
   if ('user_id' in tokenPayload) {
     if (tokenPayload.role === 'student') {
@@ -67,7 +67,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
             obtainedMarks++;
         }
 
-        let updated = await prisma.studentQuiz.updateMany({
+        let updated = await prisma.result.updateMany({
           where: {studentId: req.body.user_id as number, quizId: quiz_id},
           data: {
             obtainedMarks: obtainedMarks,
@@ -110,11 +110,13 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
       return res.status(200).json(quiz);
     } else {
-      const studentQuiz = await prisma.studentQuiz.findFirst({
+      // Student get quiz
+
+      const result = await prisma.result.findFirst({
         where: {quizId: quiz_id, studentId: tokenPayload.user_id as number}
       });
 
-      if (!studentQuiz) return res.status(404).json({status: 'not found.'})
+      if (!result) return res.status(404).json({status: 'not found.'})
 
       const quiz = await prisma.quiz.findFirst({
         where: {id: quiz_id},
@@ -216,7 +218,6 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json({updated});
       } catch (err) {
-        console.log(err)
         return res.status(400).json({status: 'invalid body parameters'});
       }
     } else {

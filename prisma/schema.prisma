@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  name        String
-  password    String
-  role        String
-  Quiz        Quiz[]
-  StudentQuiz StudentQuiz[]
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  name     String
+  password String
+  role     String
+  quiz     Quiz[]
+  results  Result[]
+  teachers User[]   @relation("teacherStudent", references: [id])
+  students User[]   @relation("teacherStudent", references: [id])
 }
 
 model Quiz {
-  id          Int           @id @default(autoincrement())
-  teacher     User          @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  teacherId   Int
-  name        String
-  createdAt   DateTime      @default(now())
-  questions   Question[]
-  StudentQuiz StudentQuiz[]
+  id        Int        @id @default(autoincrement())
+  teacher   User       @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  teacherId Int
+  name      String
+  createdAt DateTime   @default(now())
+  questions Question[]
+  results   Result[]
 }
 
 model Question {
@@ -39,7 +41,7 @@ model Question {
   answer  Int
 }
 
-model StudentQuiz {
+model Result {
   id            Int  @id @default(autoincrement())
   quizId        Int
   studentId     Int
@@ -47,5 +49,6 @@ model StudentQuiz {
   quiz          Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   obtainedMarks Int?
   totalMarks    Int  @default(0)
+
   @@unique([quizId, studentId], name: "studentQuizUK")
 }

@@ -35,22 +35,36 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       const user = await prisma.user.findUnique({
         where: {id: tokenPayload.user_id as number},
         include: {
-          Quiz: true
+          quiz: true
         }
       })
 
       if (!user) return res.status(500).json({});
-      return res.status(200).json(user.Quiz);
+      return res.status(200).json(user.quiz);
     } else {
+      // Student getting assigned quizzes
+
       const user = await prisma.user.findUnique({
         where: {id: tokenPayload.user_id as number},
         include: {
-          StudentQuiz: true
+          teachers: {
+            include: {
+              quiz: true
+            }
+          }
         }
-      })
+      });
 
-      if (!user) return res.status(500).json({});
-      return res.status(200).json(user.StudentQuiz);
+      if (!user) return res.status(404).json({});
+
+      let quizzes = user.teachers.map((teacher: any) => {
+        return {
+          name: teacher.name,
+          quiz: teacher.quiz,
+        }
+      });
+
+      return res.status(200).json(quizzes);
     }
   }
   return res.status(500).json({});
@@ -66,7 +80,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
 
   if ('user_id' in tokenPayload && tokenPayload.user_id) {
-    const prisma = new PrismaClient()
+    const prisma = new PrismaClient();
     if (tokenPayload.role === 'teacher') {
 
       // Verifying parameters
