@@ -18,10 +18,73 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return handlePut(req, res);
     case 'DELETE':
       return handleDelete(req, res);
+    case 'POST':
+      return handlePost(req, res);
   }
 
   // Invalid method
   return res.status(404).json({error: 'not found'});
+}
+
+/**
+ * Students Post Answers
+ * @param req
+ * @param res
+ */
+async function handlePost(req: NextApiRequest, res: NextApiResponse) {
+  const tokenPayload = await verifyAuth(req, res) as JWTPayload;
+  const prisma = new PrismaClient()
+  const {qid} = req.query;
+  const quiz_id = Number.parseInt(qid.toString())
+
+  if ('user_id' in tokenPayload) {
+    if (tokenPayload.role === 'student') {
+
+      if (!req.body || !req.body.answers) {
+        return res.status(400).json({status: 'required parameters missing'});
+      }
+
+      const quiz = await prisma.quiz.findUnique({
+        where: {id: quiz_id},
+        include: {questions: true}
+      });
+
+      if (!quiz) return res.status(404).json({status: 'not found.'})
+
+      type Answer = {
+        questionId: number,
+        selected?: number,
+      };
+
+      try {
+        let obtainedMarks = 0;
+        let answers = req.body.answers as Answer[];
+        let totalMarks = quiz.questions.length;
+
+        for (let answer of answers) {
+          let question = quiz.questions.find((question) => question.id === answer.questionId);
+          if (question && question.answer === answer.selected)
+            obtainedMarks++;
+        }
+
+        let updated = await prisma.studentQuiz.updateMany({
+          where: {studentId: req.body.user_id as number, quizId: quiz_id},
+          data: {
+            obtainedMarks: obtainedMarks,
+            totalMarks: totalMarks
+          }
+        });
+
+        return res.status(201).json({updated});
+
+      } catch (err) {
+        return res.status(400).json({error: 'invalid parameters'});
+      }
+    } else {
+      return res.status(401).json({error: 'unauthorized'});
+    }
+  }
+  return res.status(500).json({});
 }
 
 /**

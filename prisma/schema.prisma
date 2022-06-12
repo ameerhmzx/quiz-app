@@ -46,4 +46,6 @@ model StudentQuiz {
   student       User @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   quiz          Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   obtainedMarks Int?
+  totalMarks    Int  @default(0)
+  @@unique([quizId, studentId], name: "studentQuizUK")
 }
