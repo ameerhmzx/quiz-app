@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {JWTPayload} from "jose";
 import {PrismaClient} from "@prisma/client";
-import {verifyAuth} from "../../../../lib/auth";
+import {verifyAuth} from "../../../../lib/authServer";
 
 
 /**

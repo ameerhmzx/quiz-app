@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {verifyAuth} from "../../../lib/auth";
+import {verifyAuth} from "../../../lib/authServer";
 
 /**
  * Endpoint to verify the authentication

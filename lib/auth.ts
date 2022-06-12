@@ -1,28 +1,27 @@
-/* eslint-disable @next/next/no-server-import-in-page */
-import {NextApiRequest, NextApiResponse} from "next";
-import {jwtVerify} from 'jose'
+import Axios from 'axios';
 
-export async function verifyAuth(req: NextApiRequest, res: NextApiResponse) {
+const TOKEN_KEY = 'authToken';
+const isBrowser = typeof localStorage !== 'undefined';
 
-  if (!req.headers.authorization) {
-    return res.status(401).json({error: 'missing authentication token'})
-  }
-
-  try {
-    const authSplit = req.headers.authorization.split(" ");
-    let token = ""
-    if (authSplit.length >= 2 && authSplit[0] == "Bearer") {
-      token = authSplit[1];
-    } else {
-      return res.status(400).json({error: 'invalid authentication token'})
-    }
-
-    const verified = await jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_SECRET_KEY)
-    )
-    return verified.payload
-  } catch (err) {
-    return res.status(401).json({error: 'authentication required'})
-  }
+let localAccessToken = '';
+if (isBrowser) {
+  localAccessToken = localStorage.getItem(TOKEN_KEY) || '';
 }
+
+if (localAccessToken) {
+  Axios.defaults.headers.common.Authorization = `AccessToken ${localAccessToken}`;
+}
+
+export const setToken = (token: string = '') => {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    Axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+    delete Axios.defaults.headers.common.Authorization;
+  }
+
+  localAccessToken = token;
+};
+
+export const isAuthenticated = () => isBrowser ? !!localAccessToken : true;
