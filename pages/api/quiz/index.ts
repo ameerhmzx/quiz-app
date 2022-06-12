@@ -51,7 +51,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             include: {
               quiz: true
             }
-          }
+          },
+          results: true,
         }
       });
 
@@ -61,6 +62,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         return {
           name: teacher.name,
           quiz: teacher.quiz,
+          result: user.results.find((res) => res.quizId === teacher.quiz.id)
         }
       });
 
