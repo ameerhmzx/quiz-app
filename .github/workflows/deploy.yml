@@ -2,7 +2,7 @@ name: Deploy Docker Compose to Remote
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
