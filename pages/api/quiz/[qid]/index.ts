@@ -52,7 +52,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
       type Answer = {
         questionId: number,
-        selected?: number,
+        selected: number,
       };
 
       try {
@@ -66,15 +66,16 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
             obtainedMarks++;
         }
 
-        let updated = await prisma.result.updateMany({
-          where: {studentId: req.body.user_id as number, quizId: quiz_id},
+        let result = await prisma.result.create({
           data: {
+            quizId: quiz_id,
+            studentId: tokenPayload.user_id as number,
             obtainedMarks: obtainedMarks,
             totalMarks: totalMarks
           }
         });
 
-        return res.status(201).json({updated});
+        return res.status(201).json(result);
 
       } catch (err) {
         return res.status(400).json({error: 'invalid parameters'});
@@ -110,20 +111,22 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     } else {
       // Student get quiz
 
-      const result = await prisma.result.findFirst({
-        where: {quizId: quiz_id, studentId: tokenPayload.user_id as number}
-      });
-
-      if (!result) return res.status(404).json({status: 'not found.'})
-
-      const quiz = await prisma.quiz.findFirst({
+      const quiz = await prisma.quiz.findUnique({
         where: {id: quiz_id},
-        include: {questions: true}
+        include: {
+          questions: true,
+          results: {
+            where: {studentId: tokenPayload.user_id as number}
+          }
+        }
       });
 
-      if (!quiz) return res.status(404).json({status: 'not found.'})
-      let questions = quiz.questions.map((question) => ({...question, answer: undefined}));
-
+      if (!quiz) return res.status(404).json({error: 'not found.'})
+      if (quiz.results.length > 0) return res.status(403).json({error: 'quiz already taken.'})
+      let questions = quiz.questions.map((question: any) => {
+        delete question.answer;
+        return question;
+      });
       return res.status(200).json({...quiz, questions: questions});
     }
   }
