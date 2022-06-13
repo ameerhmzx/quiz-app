@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../../../lib/db";
 import bcrypt from "bcryptjs";
 import {SignJWT} from "jose";
 import {nanoid} from "nanoid";
@@ -40,7 +40,6 @@ export default async function handler(
     return res.status(400).json({error: 'password must contains at least 6 characters'});
   }
 
-  const prisma = new PrismaClient()
   try {
     // Creating new user
     const user = await prisma.user.create({

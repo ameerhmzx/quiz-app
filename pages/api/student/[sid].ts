@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {verifyAuth} from "../../../lib/authServer";
 import {JWTPayload} from "jose";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../../../lib/db";
 
 /**
  * Teacher deletes student account
@@ -14,7 +14,6 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
   const stud_id = Number.parseInt(sid.toString())
 
   if (tokenPayload.role === 'teacher') {
-    const prisma = new PrismaClient();
 
     const teacher = await prisma.user.update({
       where: {id: tokenPayload.user_id as number},

@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {verifyAuth} from "../../../lib/authServer";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../../../lib/db";
 import {JWTPayload} from "jose";
 
 /**
@@ -30,7 +30,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
 
   if ('user_id' in tokenPayload) {
-    const prisma = new PrismaClient()
     if (tokenPayload.role === 'teacher') {
       const user = await prisma.user.findUnique({
         where: {id: tokenPayload.user_id as number},
@@ -97,7 +96,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
 
   if ('user_id' in tokenPayload && tokenPayload.user_id) {
-    const prisma = new PrismaClient();
     if (tokenPayload.role === 'teacher') {
 
       // Verifying parameters

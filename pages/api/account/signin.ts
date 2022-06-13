@@ -2,8 +2,8 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {SignJWT} from 'jose';
 import {nanoid} from 'nanoid';
-import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import {prisma} from "../../../lib/db";
 
 type Data = {
   token?: string,
@@ -26,7 +26,6 @@ export default async function handler(
   }
 
   // Getting matched user from the database
-  const prisma = new PrismaClient()
   const user = await prisma.user.findUnique({
     where: {email: req.body.email},
   })

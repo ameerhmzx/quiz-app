@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {verifyAuth} from "../../../lib/authServer";
 import {JWTPayload} from "jose";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../../../lib/db";
 import bcrypt from "bcryptjs";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 
@@ -14,7 +14,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
 
   if (tokenPayload.role === 'teacher') {
-    const prisma = new PrismaClient();
 
     const teacher = await prisma.user.findUnique({
       where: {id: tokenPayload.user_id as number},
@@ -55,7 +54,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       email: string,
     }
     const student = req.body as Student;
-    const prisma = new PrismaClient();
 
     try {
       let studentExisted = await prisma.user.findFirst({

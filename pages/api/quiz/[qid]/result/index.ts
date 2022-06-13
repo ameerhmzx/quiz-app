@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {JWTPayload} from "jose";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../../../../../lib/db";
 import {verifyAuth} from "../../../../../lib/authServer";
 
 /**
@@ -21,7 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const tokenPayload = await verifyAuth(req, res) as JWTPayload;
-  const prisma = new PrismaClient();
   const {qid} = req.query;
   const quiz_id = Number.parseInt(qid.toString());
 
