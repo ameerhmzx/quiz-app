@@ -48,7 +48,7 @@ export default function RegisterPage() {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-              <h2 className="mb-16 text-center text-3xl font-bold text-green-900">Sign up to Quiz App</h2>
+              <h2 className="mb-16 text-center text-heading">Sign up to Quiz App</h2>
 
               <form className="space-y-6" onSubmit={handleSubmit}>
                 {error && <div className='text-sm bg-red-100 text-red-900 py-2 px-4 rounded-md capitalize'>
@@ -64,6 +64,7 @@ export default function RegisterPage() {
                       id="name"
                       name="name"
                       type="name"
+                      value={name}
                       onChange={(e) => setName(e.target.value)}
                       autoComplete="name"
                       required
@@ -83,6 +84,7 @@ export default function RegisterPage() {
                       type="email"
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="email"
+                      value={email}
                       required
                       className="input"
                     />
@@ -98,6 +100,7 @@ export default function RegisterPage() {
                       id="password"
                       name="password"
                       type="password"
+                      value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
                       required
@@ -117,7 +120,7 @@ export default function RegisterPage() {
                 <div>
                   <button
                     type="submit"
-                    className="btn-primary"
+                    className="btn-primary w-full"
                   >
                     Signup
                   </button>

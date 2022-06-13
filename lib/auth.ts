@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import {decodeJwt} from "jose";
 
 const TOKEN_KEY = 'authToken';
 const isBrowser = typeof localStorage !== 'undefined';
@@ -9,7 +10,7 @@ if (isBrowser) {
 }
 
 if (localAccessToken) {
-  Axios.defaults.headers.common.Authorization = `AccessToken ${localAccessToken}`;
+  Axios.defaults.headers.common.Authorization = `Bearer ${localAccessToken}`;
 }
 
 export const setToken = (token: string = '') => {
@@ -23,5 +24,18 @@ export const setToken = (token: string = '') => {
 
   localAccessToken = token;
 };
+
+type Payload = {
+  user_id: number,
+  role: string,
+  name: string,
+  email: string
+};
+
+export function getPayload(): Payload | undefined {
+  if (localAccessToken)
+    return decodeJwt(localAccessToken) as Payload;
+}
+
 
 export const isAuthenticated = () => isBrowser ? !!localAccessToken : true;

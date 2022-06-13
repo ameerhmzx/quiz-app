@@ -25,6 +25,7 @@ model Quiz {
   teacherId Int
   name      String
   createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   questions Question[]
   results   Result[]
 }

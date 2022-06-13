@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .input {
-    @apply appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 sm:text-sm;
+    @apply appearance-none block w-full px-3 py-2 border border-gray-300;
+    @apply rounded-md shadow-sm placeholder-gray-400 sm:text-sm;
 }
 
 .input:focus {
@@ -11,9 +12,14 @@
 }
 
 .btn-primary {
-    @apply w-full duration-200 flex justify-center py-2 px-4 border border-transparent uppercase rounded shadow-sm text-sm font-bold text-white bg-green-900 hover:bg-green-700;
+    @apply duration-200 flex justify-center py-2 px-4 cursor-pointer border border-transparent uppercase;
+    @apply rounded shadow-sm text-sm font-bold text-white bg-green-900 hover:bg-green-700;
 }
 
 .btn-primary:focus {
     @apply outline-none ring-2 ring-offset-2 ring-green-700;
+}
+
+.text-heading {
+    @apply text-3xl font-bold text-green-900;
 }

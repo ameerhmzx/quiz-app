@@ -1,6 +1,6 @@
 import {PropsWithChildren, useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {isAuthenticated} from '../lib/auth';
+import {getPayload, isAuthenticated} from '../lib/auth';
 
 export default function ValidateRoute({children}: PropsWithChildren) {
   const router = useRouter();
@@ -15,12 +15,22 @@ export default function ValidateRoute({children}: PropsWithChildren) {
     const path = url.split('?')[0].replace(/^\/$/, '');
     if (!isAuthenticated() && !authenticationRoutes.includes(path.replace(/\/$/, ''))) {
       setAllowed(false);
-      router.push({pathname: '/account/login'});
-    } else if (isAuthenticated() && authenticationRoutes.includes(path.replace(/\/$/, ''))){
-      router.push({pathname: '/'});
-    } else {
-      setAllowed(true);
+      return router.push({pathname: '/account/login'});
     }
+
+    if (isAuthenticated()) {
+      const role = getPayload()?.role;
+
+      if (role === 'teacher' && !path.startsWith('/teacher')) {
+        return router.push({pathname: '/teacher/quiz'});
+      }
+
+      if (role === 'student' && !path.startsWith('/student')) {
+        return router.push({pathname: '/student'});
+      }
+    }
+
+    setAllowed(true);
   }
 
   useEffect(() => {

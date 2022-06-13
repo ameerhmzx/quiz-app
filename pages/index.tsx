@@ -1,15 +1,5 @@
-import DashboardLayout from "../components/DashboardLayout";
-import {setToken} from "../lib/auth";
-import Head from "next/head";
+// Redirected to student or teacher
 
 export default function HomePage() {
-  return <>
-    <Head>
-      <title>Quiz App</title>
-    </Head>
-
-    <DashboardLayout>
-      <button onClick={() => setToken()}>Logout</button>
-    </DashboardLayout>
-  </>;
+  return <></>;
 }

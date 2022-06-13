@@ -35,12 +35,27 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       const user = await prisma.user.findUnique({
         where: {id: tokenPayload.user_id as number},
         include: {
-          quiz: true
+          quiz: {
+            include: {
+              _count: {
+                select: {results: true},
+              },
+            }
+          }
         }
-      })
+      });
 
       if (!user) return res.status(500).json({});
-      return res.status(200).json(user.quiz);
+
+      let data = user.quiz.map((quiz) => {
+        return {
+          id: quiz.id,
+          name: quiz.name,
+          submitCount: quiz._count.results,
+          updatedAt: quiz.updatedAt,
+        }
+      });
+      return res.status(200).json(data);
     } else {
       // Student getting assigned quizzes
 
