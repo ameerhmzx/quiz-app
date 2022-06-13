@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  name     String
-  password String
-  role     String
-  quiz     Quiz[]
-  results  Result[]
-  teachers User[]   @relation("teacherStudent", references: [id])
-  students User[]   @relation("teacherStudent", references: [id])
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  role      String
+  quiz      Quiz[]
+  results   Result[]
+  createdAt DateTime @default(now())
+  teachers  User[]   @relation("teacherStudent", references: [id])
+  students  User[]   @relation("teacherStudent", references: [id])
 }
 
 model Quiz {
