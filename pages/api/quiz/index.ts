@@ -72,13 +72,28 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
       if (!user) return res.status(404).json({});
 
-      let quizzes = user.teachers.map((teacher: any) => {
-        return {
-          name: teacher.name,
-          quiz: teacher.quiz,
-          result: user.results.find((res) => res.quizId === teacher.quiz.id)
+      type Quiz = {
+        id: number,
+        name: string,
+        teacherName: string,
+        totalMarks?: number,
+        obtainedMarks?: number,
+      };
+
+      let quizzes: Quiz[] = [];
+
+      for (let teacher of user.teachers) {
+        for (let quiz of teacher.quiz) {
+          const result = user.results.find((res) => res.quizId === quiz.id);
+          quizzes.push({
+            id: quiz.id,
+            name: quiz.name,
+            teacherName: teacher.name,
+            totalMarks: result?.totalMarks,
+            obtainedMarks: result?.obtainedMarks || undefined,
+          });
         }
-      });
+      }
 
       return res.status(200).json(quizzes);
     }

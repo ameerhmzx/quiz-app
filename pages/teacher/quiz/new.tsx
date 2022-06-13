@@ -300,7 +300,7 @@ export default function NewQuiz() {
         }
 
         <div className='flex justify-center'>
-          <div onClick={handleAddQuestion} className='btn-primary'>Add Question</div>
+          <div onClick={handleAddQuestion} className='btn-secondary'>Add Question</div>
         </div>
       </form>
     </DefaultLayout>
