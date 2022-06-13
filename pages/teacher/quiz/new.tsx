@@ -5,6 +5,7 @@ import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import axios from "axios";
 import {useRouter} from "next/router";
+import {TrashIcon} from "@heroicons/react/outline";
 
 export default function NewQuiz() {
 
@@ -123,15 +124,8 @@ export default function NewQuiz() {
             <div key={idx} className='w-full bg-white shadow rounded px-12 py-8'>
 
               <div className='flex justify-end'>
-                <div onClick={() => handleDeleteQuestion(idx)}
-                     className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.5 5H4.16667H17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                          strokeLinejoin="round"/>
-                    <path
-                      d="M6.6665 5V3.33333C6.6665 2.89131 6.8421 2.46738 7.15466 2.15482C7.46722 1.84226 7.89114 1.66667 8.33317 1.66667H11.6665C12.1085 1.66667 12.5325 1.84226 12.845 2.15482C13.1576 2.46738 13.3332 2.89131 13.3332 3.33333V5M15.8332 5V16.6667C15.8332 17.1087 15.6576 17.5326 15.345 17.8452C15.0325 18.1577 14.6085 18.3333 14.1665 18.3333H5.83317C5.39114 18.3333 4.96722 18.1577 4.65466 17.8452C4.3421 17.5326 4.1665 17.1087 4.1665 16.6667V5H15.8332Z"
-                      stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                <div onClick={() => handleDeleteQuestion(idx)} className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
+                  <TrashIcon className='w-5' />
                 </div>
               </div>
 

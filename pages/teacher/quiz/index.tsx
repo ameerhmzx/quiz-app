@@ -3,7 +3,7 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Link from "next/link";
-import {PlusCircleIcon} from "@heroicons/react/outline";
+import {DocumentTextIcon, PencilAltIcon, PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
 
 export default function QuizPage() {
   type Quiz = {
@@ -25,6 +25,17 @@ export default function QuizPage() {
       }).catch(console.error);
   }, []);
 
+  function handleDelete(id: string) {
+    axios
+      .delete(`/api/quiz/${id}`)
+      .then(({status}) => {
+        if (status === 200) {
+          setQuizzes(quizzes.filter((quiz) => quiz.id !== id));
+        }
+      })
+      .catch(console.error);
+  }
+
   return <>
     <Head>
       <title>Quiz | Quiz App</title>
@@ -44,8 +55,8 @@ export default function QuizPage() {
           </Link>
         </div>
 
-        <div className='w-full bg-white shadow rounded'>
-          <div className='px-12 py-16'>
+        <div className='w-full bg-white shadow rounded '>
+          <div className='px-12 py-16 overflow-x-auto'>
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="">
               <tr>
@@ -74,11 +85,22 @@ export default function QuizPage() {
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">{quiz.updatedAt.toString()}</td>
                   <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">{quiz.submitCount}</td>
-                  <td className="relative whitespace-nowrap py-3 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <Link href={`/teacher/quiz/${quiz.id}/edit`}
-                          className="cursor-pointer text-indigo-600 hover:text-indigo-900">
-                      Edit
+                  <td
+                    className="relative flex items-center justify-end pt-1 whitespace-nowrap pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <Link href={`/teacher/quiz/${quiz.id}/result`}>
+                      <div className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
+                        <DocumentTextIcon className='w-5'/>
+                      </div>
                     </Link>
+                    <Link href={`/teacher/quiz/${quiz.id}/edit`}>
+                      <div className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
+                        <PencilAltIcon className='w-5'/>
+                      </div>
+                    </Link>
+                    <div onClick={() => handleDelete(quiz.id)}
+                         className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
+                      <TrashIcon className='w-5'/>
+                    </div>
                   </td>
                 </tr>
               ))}
