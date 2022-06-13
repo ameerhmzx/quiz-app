@@ -35,7 +35,7 @@ export default function Header() {
         <h1 className='text-white font-bold ml-4'>Quiz App</h1>
         {isAuthenticated() &&
             <>
-                <div className='w-px h-full h-6 bg-white mx-4'/>
+                <div className='w-px h-6 bg-white mx-4'/>
                 <p className='text-white text-xs capitalize'>{getPayload()?.role} Portal</p>
             </>
         }

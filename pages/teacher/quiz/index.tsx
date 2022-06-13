@@ -86,8 +86,8 @@ export default function QuizPage() {
                       <div>{quiz.name}</div>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">{quiz.updatedAt.toString()}</td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">{quiz.submitCount}</td>
+                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{quiz.updatedAt.toString()}</td>
+                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{quiz.submitCount}</td>
                   <td
                     className="relative whitespace-nowrap text-right pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div className='flex items-center justify-end'>
