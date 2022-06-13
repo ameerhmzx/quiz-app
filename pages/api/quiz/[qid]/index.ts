@@ -215,7 +215,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse) {
           }
         });
 
-        return res.status(200).json({updated});
+        return res.status(200).json(updated);
       } catch (err) {
         return res.status(400).json({status: 'invalid body parameters'});
       }

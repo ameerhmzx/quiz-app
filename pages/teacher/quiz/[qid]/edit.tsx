@@ -10,8 +10,10 @@ import {PlusCircleIcon} from "@heroicons/react/outline";
 export default function NewQuiz() {
 
   const router = useRouter();
+  const {qid} = router.query;
 
   type Question = {
+    quizId: number,
     title: string,
     option1: string,
     option2: string,
@@ -22,6 +24,7 @@ export default function NewQuiz() {
 
   const newQuestion = {
     title: '',
+    quizId: Number.parseInt(String(qid)),
     option1: '',
     option2: '',
     option3: '',
@@ -31,8 +34,6 @@ export default function NewQuiz() {
 
   const [name, setName] = useState("");
   const [questions, setQuestions] = useState<Question[]>([{...newQuestion}]);
-
-  const {qid} = router.query;
 
   useEffect(() => {
     if (!qid) return;
