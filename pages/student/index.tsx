@@ -39,50 +39,55 @@ export default function StudentPage() {
 
         <div className='w-full bg-white shadow rounded '>
           <div className='px-12 py-16 overflow-x-auto'>
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="">
-              <tr>
-                <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
-                  Name
-                </th>
-                <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
-                  Teacher
-                </th>
-                <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-right text-xs font-semibold uppercase text-gray-500 sm:pl-6">
-                  Result
-                </th>
-              </tr>
-              </thead>
-              <tbody className="bg-white">
-              {quizzes && quizzes.map((quiz, idx) => (
-                <tr key={quiz.id} className={idx % 2 === 0 ? undefined : 'bg-gray-100 rounded'}>
-                  <td
-                    className="whitespace-nowrap space-x-2 py-3 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    <div className='flex items-center space-x-2'>
-                      <ClipboardListIcon className='w-4'/>
-                      <div>{quiz.name}</div>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-center text-sm text-gray-500">{quiz.teacherName}</td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                    <div className='flex justify-end'>{
-                      quiz.obtainedMarks !== undefined ? <div>
-                          {quiz.obtainedMarks} / {quiz.totalMarks}
-                        </div> :
-                        <Link href={`/student/${quiz.id}`}>
-                          <div className='btn-secondary'>
-                            Attempt
-                          </div>
-                        </Link>
-                    }</div>
-                  </td>
+            {quizzes && quizzes.length > 0 ?
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="">
+                <tr>
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    Name
+                  </th>
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    Teacher
+                  </th>
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-right text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    Result
+                  </th>
                 </tr>
-              ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white">
+                {quizzes && quizzes.map((quiz, idx) => (
+                  <tr key={quiz.id} className={idx % 2 === 0 ? undefined : 'bg-gray-100 rounded'}>
+                    <td
+                      className="whitespace-nowrap space-x-2 py-3 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <div className='flex items-center space-x-2'>
+                        <ClipboardListIcon className='w-4'/>
+                        <div>{quiz.name}</div>
+                      </div>
+                    </td>
+                    <td
+                      className="whitespace-nowrap px-3 py-3 text-center text-sm text-gray-500">{quiz.teacherName}</td>
+                    <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
+                      <div className='flex justify-end'>{
+                        quiz.obtainedMarks !== undefined ? <div>
+                            {quiz.obtainedMarks} / {quiz.totalMarks}
+                          </div> :
+                          <Link href={`/student/${quiz.id}`}>
+                            <div className='btn-secondary'>
+                              Attempt
+                            </div>
+                          </Link>
+                      }</div>
+                    </td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+              : <div className='flex items-center justify-center'>
+                <p className='font-bold'>Yay! No Quiz Available.</p>
+              </div>}
           </div>
         </div>
       </div>

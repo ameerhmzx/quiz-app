@@ -163,41 +163,46 @@ export default function QuizPage() {
 
         <div className='w-full bg-white shadow rounded'>
           <div className='px-12 py-16 overflow-x-auto'>
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="">
-              <tr>
-                <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
-                  Name
-                </th>
-                <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
-                  Added On
-                </th>
-                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                  <span className="sr-only">Delete</span>
-                </th>
-              </tr>
-              </thead>
-              <tbody className="bg-white">
-              {students && students.map((student, idx) => (
-                <tr key={student.id} className={idx % 2 === 0 ? undefined : 'bg-gray-100 rounded'}>
-                  <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    {student.name}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-center text-gray-500">{format(new Date(student.createdAt), 'd MMMM, yyyy')}</td>
-                  <td className="relative whitespace-nowrap py-3 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <div className='flex justify-end'>
-                      <div onClick={() => handleDelete(student.id)}
-                           className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
-                        <TrashIcon className='w-5'/>
-                      </div>
-                    </div>
-                  </td>
+            {students && students.length > 0 ?
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                <tr>
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    Name
+                  </th>
+                  <th scope="col"
+                      className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    Added On
+                  </th>
+                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span className="sr-only">Delete</span>
+                  </th>
                 </tr>
-              ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white">
+                {students && students.map((student, idx) => (
+                  <tr key={student.id} className={idx % 2 === 0 ? undefined : 'bg-gray-100 rounded'}>
+                    <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      {student.name}
+                    </td>
+                    <td
+                      className="whitespace-nowrap px-3 py-3 text-sm text-center text-gray-500">{format(new Date(student.createdAt), 'd MMMM, yyyy')}</td>
+                    <td className="relative whitespace-nowrap py-3 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <div className='flex justify-end'>
+                        <div onClick={() => handleDelete(student.id)}
+                             className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
+                          <TrashIcon className='w-5'/>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+              : <div className='flex items-center justify-center'>
+                <p className='font-bold'>No Student Invited.</p>
+              </div>}
           </div>
         </div>
       </div>
