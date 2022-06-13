@@ -4,6 +4,7 @@ import {FormEvent, Fragment, useEffect, useState} from "react";
 import axios from "axios";
 import {PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
 import {Transition, Dialog} from "@headlessui/react";
+import {format} from "date-fns";
 
 export default function QuizPage() {
   type Student = {
@@ -170,7 +171,7 @@ export default function QuizPage() {
                   Name
                 </th>
                 <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
                   Added On
                 </th>
                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -184,7 +185,7 @@ export default function QuizPage() {
                   <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                     {student.name}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">{student.createdAt.toString()}</td>
+                  <td className="whitespace-nowrap px-3 py-3 text-sm text-center text-gray-500">{format(new Date(student.createdAt), 'd MMMM, yyyy')}</td>
                   <td className="relative whitespace-nowrap py-3 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div className='flex justify-end'>
                       <div onClick={() => handleDelete(student.id)}

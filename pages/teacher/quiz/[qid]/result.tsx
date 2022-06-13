@@ -3,6 +3,7 @@ import DefaultLayout from "../../../../components/DefaultLayout";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/router";
+import {format} from "date-fns";
 import Link from "next/link";
 import {
   ArrowCircleLeftIcon,
@@ -64,7 +65,7 @@ export default function ResultPage() {
               <Link href={'/student'}>
                   <div className='flex items-center justify-start space-x-2 text-green-900 cursor-pointer'>
                       <ArrowCircleLeftIcon className='w-6'/>
-                      <p className='font-bold text-2xl'>Results: {quizName}</p>
+                      <p className='font-bold text-2xl'>Results: <span className='font-normal'>{quizName}</span></p>
                   </div>
               </Link>
 
@@ -78,11 +79,11 @@ export default function ResultPage() {
                                   Name
                               </th>
                               <th scope="col"
-                                  className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                                  className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
                                   Submitted On
                               </th>
                               <th scope="col"
-                                  className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                                  className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
                                   Result
                               </th>
                               <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -98,7 +99,7 @@ export default function ResultPage() {
                                 <div>{result.name}</div>
                               </td>
                               <td
-                                className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{result.submittedAt.toString()}</td>
+                                className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{format(new Date(result.submittedAt), 'd MMMM, yyyy')}</td>
                               <td
                                 className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{result.obtainedMarks} / {result.totalMarks}</td>
                               <td
@@ -116,7 +117,6 @@ export default function ResultPage() {
                       </table>
                   </div>
               </div>
-
           </div>}
     </DefaultLayout>
   </>;

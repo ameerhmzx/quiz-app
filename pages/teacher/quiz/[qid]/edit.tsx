@@ -5,6 +5,7 @@ import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import axios from "axios";
 import {useRouter} from "next/router";
 import DefaultLayout from "../../../../components/DefaultLayout";
+import {PlusCircleIcon} from "@heroicons/react/outline";
 
 export default function NewQuiz() {
 
@@ -34,11 +35,11 @@ export default function NewQuiz() {
   const {qid} = router.query;
 
   useEffect(() => {
-    if(!qid) return;
+    if (!qid) return;
     axios
       .get(`/api/quiz/${qid}`)
       .then(({status, data}) => {
-        if(status === 200) {
+        if (status === 200) {
           setName(data.name);
           setQuestions(data.questions);
         }
@@ -315,13 +316,15 @@ export default function NewQuiz() {
                   </label>
                 </div>
               </div>
-
             </div>
           ))
         }
 
         <div className='flex justify-center'>
-          <div onClick={handleAddQuestion} className='btn-secondary'>Add Question</div>
+          <div onClick={handleAddQuestion} className='w-full btn-secondary flex items-center space-x-2'>
+            <PlusCircleIcon className='w-5'/>
+            <span>Add Question</span>
+          </div>
         </div>
       </form>
     </DefaultLayout>

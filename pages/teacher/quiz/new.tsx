@@ -5,7 +5,7 @@ import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import axios from "axios";
 import {useRouter} from "next/router";
-import {TrashIcon} from "@heroicons/react/outline";
+import {PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
 
 export default function NewQuiz() {
 
@@ -294,13 +294,15 @@ export default function NewQuiz() {
                   </label>
                 </div>
               </div>
-
             </div>
           ))
         }
 
         <div className='flex justify-center'>
-          <div onClick={handleAddQuestion} className='btn-secondary'>Add Question</div>
+          <div onClick={handleAddQuestion} className='w-full btn-secondary flex items-center space-x-2'>
+            <PlusCircleIcon className='w-5'/>
+            <span>Add Question</span>
+          </div>
         </div>
       </form>
     </DefaultLayout>

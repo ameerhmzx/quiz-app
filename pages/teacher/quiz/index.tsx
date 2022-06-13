@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Link from "next/link";
 import {ClipboardListIcon, DocumentTextIcon, PencilAltIcon, PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
+import {formatDistanceToNow} from "date-fns";
 
 export default function QuizPage() {
   type Quiz = {
@@ -65,11 +66,11 @@ export default function QuizPage() {
                   Name
                 </th>
                 <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
                   Last Modified
                 </th>
                 <th scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase text-gray-500 sm:pl-6">
+                    className="py-3.5 pl-4 pr-3 text-center text-xs font-semibold uppercase text-gray-500 sm:pl-6">
                   Submitted By
                 </th>
                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -86,18 +87,20 @@ export default function QuizPage() {
                       <div>{quiz.name}</div>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{quiz.updatedAt.toString()}</td>
+                  <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{formatDistanceToNow(new Date(quiz.updatedAt)) + " ago"}</td>
                   <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 text-center">{quiz.submitCount}</td>
                   <td
                     className="relative whitespace-nowrap text-right pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div className='flex items-center justify-end'>
                       <Link href={`/teacher/quiz/${quiz.id}/result`}>
-                        <div className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
+                        <div
+                          className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
                           <DocumentTextIcon className='w-5'/>
                         </div>
                       </Link>
                       <Link href={`/teacher/quiz/${quiz.id}/edit`}>
-                        <div className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
+                        <div
+                          className="duration-200 hover:bg-green-100 hover:text-green-700 p-2 rounded cursor-pointer">
                           <PencilAltIcon className='w-5'/>
                         </div>
                       </Link>
