@@ -90,7 +90,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             name: quiz.name,
             teacherName: teacher.name,
             totalMarks: result?.totalMarks,
-            obtainedMarks: result?.obtainedMarks || undefined,
+            obtainedMarks: result?.obtainedMarks,
           });
         }
       }

@@ -26,15 +26,31 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
   if (tokenPayload.role === 'teacher') {
     // Teacher
-    let quizzes = await prisma.quiz.findFirst({
+    let quiz = await prisma.quiz.findFirst({
       where: {id: quiz_id, teacherId: tokenPayload.user_id as number},
       include: {
-        results: true,
+        results: {
+          include: {
+            student: {
+              select: {name: true}
+            }
+          }
+        },
       }
     });
 
-    if (!quizzes) return res.status(404).json({});
-    return res.status(200).json(quizzes.results);
+    if (!quiz) return res.status(404).json({});
+
+    let results = quiz.results.map((result) => {
+      return {
+        id: result.id,
+        name: result.student.name,
+        submittedAt: result.createdAt,
+        obtainedMarks: result.obtainedMarks,
+        totalMarks: result.totalMarks,
+      }
+    });
+    return res.status(200).json({name: quiz.name, results: results});
   } else {
     return res.status(401).json({error: 'unauthorized'});
   }

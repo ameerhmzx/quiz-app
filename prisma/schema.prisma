@@ -44,13 +44,14 @@ model Question {
 }
 
 model Result {
-  id            Int  @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   quizId        Int
   studentId     Int
-  student       User @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  quiz          Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  student       User     @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   obtainedMarks Int
   totalMarks    Int
+  createdAt     DateTime @default(now())
 
   @@unique([quizId, studentId], name: "studentQuizUK")
 }

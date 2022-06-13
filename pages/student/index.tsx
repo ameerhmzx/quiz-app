@@ -69,7 +69,7 @@ export default function StudentPage() {
                   <td className="whitespace-nowrap px-3 py-3 text-center text-sm text-gray-500">{quiz.teacherName}</td>
                   <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                     <div className='flex justify-end'>{
-                      quiz.obtainedMarks ? <div>
+                      quiz.obtainedMarks !== undefined ? <div>
                           {quiz.obtainedMarks} / {quiz.totalMarks}
                         </div> :
                         <Link href={`/student/${quiz.id}`}>
