@@ -1,10 +1,11 @@
 import DefaultLayout from "../../../components/DefaultLayout";
 import Head from "next/head";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Link from "next/link";
 import {ClipboardListIcon, DocumentTextIcon, PencilAltIcon, PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
 import {formatDistanceToNow} from "date-fns";
+import LoaderContext from "../../../context/LoaderContext";
 
 export default function QuizPage() {
   type Quiz = {
@@ -15,26 +16,38 @@ export default function QuizPage() {
   };
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get('/api/quiz')
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setQuizzes(data);
         }
-      }).catch(console.error);
-  }, []);
+      }).catch((e) => {
+        console.error(e);
+        setLoading(false);
+      }
+    );
+  }, [setLoading]);
 
   function handleDelete(id: string) {
+    setLoading(true);
     axios
       .delete(`/api/quiz/${id}`)
       .then(({status}) => {
+        setLoading(false);
         if (status === 200) {
           setQuizzes(quizzes.filter((quiz) => quiz.id !== id));
         }
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
   }
 
   return <>

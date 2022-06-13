@@ -1,11 +1,12 @@
 import Head from "next/head";
-import {FormEvent, Fragment, useEffect, useState} from "react";
+import {FormEvent, Fragment, useContext, useEffect, useState} from "react";
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import axios from "axios";
 import {useRouter} from "next/router";
 import DefaultLayout from "../../../../components/DefaultLayout";
 import {PlusCircleIcon} from "@heroicons/react/outline";
+import LoaderContext from "../../../../context/LoaderContext";
 
 export default function NewQuiz() {
 
@@ -34,21 +35,28 @@ export default function NewQuiz() {
 
   const [name, setName] = useState("");
   const [questions, setQuestions] = useState<Question[]>([{...newQuestion}]);
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
     if (!qid) return;
+    setLoading(true);
     axios
       .get(`/api/quiz/${qid}`)
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setName(data.name);
           setQuestions(data.questions);
         }
       })
-      .catch(console.error)
-  }, [qid]);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      })
+  }, [qid, setLoading]);
 
   function handleUpdate(e: FormEvent) {
+    setLoading(true);
     axios
       .put(
         `/api/quiz/${qid}`,
@@ -58,12 +66,16 @@ export default function NewQuiz() {
         }
       )
       .then(({status}) => {
+        setLoading(false);
         if (status === 200) {
           router.push('/teacher/quiz')
         }
       })
-      .catch(console.error);
-    e.preventDefault()
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
+    e.preventDefault();
   }
 
   function handleAddQuestion() {

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useContext, useEffect, useState} from "react";
 import {RadioGroup} from '@headlessui/react'
 import axios from "axios";
 import {useRouter} from "next/router";
@@ -7,6 +7,7 @@ import {ArrowCircleLeftIcon, ArrowCircleRightIcon} from "@heroicons/react/outlin
 import DefaultLayout from "../../components/DefaultLayout";
 import {CheckIcon} from "@heroicons/react/solid";
 import Link from "next/link";
+import LoaderContext from "../../context/LoaderContext";
 
 export default function TakeQuizApp() {
   const router = useRouter();
@@ -30,19 +31,25 @@ export default function TakeQuizApp() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Map<number, number>>(new Map<number, number>());
   const [result, setResult] = useState<{ obtained: number, total: number } | undefined>(undefined);
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
     if (!qid) return;
+    setLoading(true);
     axios
       .get(`/api/quiz/${qid}`)
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setName(data.name);
           setQuestions(data.questions);
         }
       })
-      .catch(console.error);
-  }, [qid]);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
+  }, [qid, setLoading]);
 
   function handleSubmit(e: FormEvent) {
     let submit_answers: Answer[] = [];
@@ -54,6 +61,7 @@ export default function TakeQuizApp() {
       });
     });
 
+    setLoading(true);
     axios
       .post(
         `/api/quiz/${qid}`,
@@ -62,6 +70,7 @@ export default function TakeQuizApp() {
         }
       )
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 201) {
           setResult({
             total: data.totalMarks,
@@ -69,7 +78,10 @@ export default function TakeQuizApp() {
           });
         }
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+      });
     e.preventDefault();
   }
 

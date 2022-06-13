@@ -1,11 +1,12 @@
 import DefaultLayout from "../../../components/DefaultLayout";
 import Head from "next/head";
-import {FormEvent, Fragment, useState} from "react";
+import {FormEvent, Fragment, useContext, useState} from "react";
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid'
 import axios from "axios";
 import {useRouter} from "next/router";
 import {PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
+import LoaderContext from "../../../context/LoaderContext";
 
 export default function NewQuiz() {
 
@@ -31,8 +32,10 @@ export default function NewQuiz() {
 
   const [name, setName] = useState("");
   const [questions, setQuestions] = useState<Question[]>([{...newQuestion}]);
+  const {setLoading} = useContext(LoaderContext);
 
   function handleSave(e: FormEvent) {
+    setLoading(true);
     axios
       .post(
         '/api/quiz',
@@ -42,11 +45,15 @@ export default function NewQuiz() {
         }
       )
       .then(({status}) => {
+        setLoading(false);
         if (status === 201) {
           router.push('/teacher/quiz')
         }
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
     e.preventDefault()
   }
 
@@ -124,8 +131,9 @@ export default function NewQuiz() {
             <div key={idx} className='w-full bg-white shadow rounded px-12 py-8'>
 
               <div className='flex justify-end'>
-                <div onClick={() => handleDeleteQuestion(idx)} className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
-                  <TrashIcon className='w-5' />
+                <div onClick={() => handleDeleteQuestion(idx)}
+                     className='duration-200 hover:bg-red-100 hover:text-red-600 p-2 rounded cursor-pointer'>
+                  <TrashIcon className='w-5'/>
                 </div>
               </div>
 

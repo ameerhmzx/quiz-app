@@ -1,9 +1,10 @@
 import Head from "next/head";
 import DefaultLayout from "../../components/DefaultLayout";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Link from "next/link";
 import {ClipboardListIcon} from "@heroicons/react/outline";
+import LoaderContext from "../../context/LoaderContext";
 
 export default function StudentPage() {
   type Quiz = {
@@ -15,16 +16,22 @@ export default function StudentPage() {
   };
 
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get('/api/quiz')
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setQuizzes(data);
         }
-      }).catch(console.error);
-  }, []);
+      }).catch((e) => {
+      console.log(e);
+      setLoading(false);
+    });
+  }, [setLoading]);
 
   return <>
     <Head>

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import DefaultLayout from "../../../../components/DefaultLayout";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/router";
 import {format} from "date-fns";
@@ -9,6 +9,7 @@ import {
   ArrowCircleLeftIcon,
   TrashIcon
 } from "@heroicons/react/outline";
+import LoaderContext from "../../../../context/LoaderContext";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -25,31 +26,42 @@ export default function ResultPage() {
 
   const [results, setResults] = useState<Result[] | undefined>(undefined);
   const [quizName, setQuizName] = useState("");
+  const {setLoading} = useContext(LoaderContext);
 
 
   useEffect(() => {
     if (!qid) return;
+    setLoading(true);
     axios
       .get(`/api/quiz/${qid}/result`)
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setQuizName(data.name);
           setResults(data.results);
         }
       })
-      .catch(console.error);
-  }, [qid]);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
+  }, [qid, setLoading]);
 
   function handleDelete(id: number) {
     if (!qid) return;
+    setLoading(true);
     axios
       .delete(`/api/quiz/${qid}/result/${id}`)
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
-          setResults(results?.filter((res) => res.id !== data.id))
+          setResults(results?.filter((res) => res.id !== data.id));
         }
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
   }
 
   return <>

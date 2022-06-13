@@ -1,9 +1,10 @@
 import DefaultLayout from "../../components/DefaultLayout";
 import {useRouter} from "next/router";
 import axios from "axios";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useContext, useEffect, useState} from "react";
 import {setToken} from "../../lib/auth";
 import Head from "next/head";
+import LoaderContext from "../../context/LoaderContext";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,22 +13,26 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
     setError('')
   }, [email, password, name]);
 
   function login() {
+    setLoading(true);
     axios.post(
       `/api/account/signup`,
       {name, email, password}
     ).then(r => {
+      setLoading(false);
       if (r.status === 201) {
         setToken(r.data.token);
         router.push('/');
       }
     }).catch(err => {
       console.log(err);
+      setLoading(false);
       if (err.response.data && err.response.data.error)
         setError(err.response.data.error);
     });

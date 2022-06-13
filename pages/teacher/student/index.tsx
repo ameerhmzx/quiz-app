@@ -1,10 +1,11 @@
 import DefaultLayout from "../../../components/DefaultLayout";
 import Head from "next/head";
-import {FormEvent, Fragment, useEffect, useState} from "react";
+import {FormEvent, Fragment, useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {PlusCircleIcon, TrashIcon} from "@heroicons/react/outline";
 import {Transition, Dialog} from "@headlessui/react";
 import {format} from "date-fns";
+import LoaderContext from "../../../context/LoaderContext";
 
 export default function QuizPage() {
   type Student = {
@@ -20,36 +21,52 @@ export default function QuizPage() {
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const {setLoading} = useContext(LoaderContext);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get('/api/student')
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setStudents(data);
         }
-      }).catch(console.error);
-  }, []);
+      }).catch((e) => {
+      console.error(e);
+      setLoading(false);
+    });
+  }, [setLoading]);
 
   function handleDelete(id: string) {
+    setLoading(true);
     axios
       .delete(`/api/student/${id}`)
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 200) {
           setStudents(data);
         }
-      }).catch(console.error);
+      }).catch((e) => {
+      console.error(e);
+      setLoading(false);
+    });
   }
 
   function handleAdd(e: FormEvent) {
+    setLoading(true);
     axios
       .post(`/api/student/`, {name, email})
       .then(({status, data}) => {
+        setLoading(false);
         if (status === 201) {
           setStudents(data);
           setShowStudentAddDialog(false)
         }
-      }).catch(console.error);
+      }).catch((e) => {
+      console.error(e);
+      setLoading(false);
+    });
 
     e.preventDefault();
   }
