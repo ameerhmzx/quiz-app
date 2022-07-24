@@ -13,7 +13,3 @@ npx prisma migrate deploy
 npx prisma generate 
 npm run dev
 ```
-
-### Deployed Version
-
-Visit [quizapp.ameerhmzx.com](https://quizapp.ameerhmzx.com/) to play around with the app
